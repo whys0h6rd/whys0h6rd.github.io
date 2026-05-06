@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тепло рядом: животные против стресса</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #faf7f0;
+            color: #4a3728;
+            line-height: 1.6;
+            opacity: 0;
+            animation: fadeIn 1s ease-in forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Плавное появление элементов при скролле */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Шапка */
+        .hero {
+            background: linear-gradient(135deg, #d9c5a7 0%, #b8956e 100%);
+            color: #fff8f0;
+            padding: 60px 40px;
+            border-radius: 30px;
+            margin-bottom: 40px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 20px;
+            opacity: 0.95;
+        }
+
+        .author {
+            margin-top: 20px;
+            font-size: 16px;
+        }
+
+        /* Цифры */
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 50px 0;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: #fff8f0;
+            padding: 30px 40px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            flex: 1;
+            min-width: 200px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-bottom: 4px solid #c4a27a;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .stat-number {
+            font-size: 48px;
+            font-weight: bold;
+            color: #b8860b;
+        }
+
+        .stat-label {
+            font-size: 16px;
+            color: #6b4c3a;
+        }
+
+        /* Меню */
+        .menu {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            background: #fff8f0;
+            padding: 15px 30px;
+            border-radius: 50px;
+            margin-bottom: 50px;
+            flex-wrap: wrap;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 10px;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 248, 240, 0.95);
+        }
+
+        .menu a {
+            text-decoration: none;
+            color: #6b4c3a;
+            font-weight: 500;
+            padding: 8px 20px;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .menu a:hover {
+            background: #d9c5a7;
+            color: #4a3728;
+            transform: scale(1.05);
+        }
+
+        /* Секции */
+        .section {
+            background: #fff8f0;
+            padding: 40px;
+            border-radius: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .section:hover {
+            transform: translateY(-3px);
+        }
+
+        .section h2 {
+            font-size: 32px;
+            color: #b8860b;
+            margin-bottom: 25px;
+            border-left: 5px solid #b8860b;
+            padding-left: 20px;
+        }
+
+        .section h3 {
+            font-size: 24px;
+            margin: 25px 0 15px 0;
+            color: #8b5a2b;
+        }
+
+        /* Таблицы */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            background: #fffdf9;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        th, td {
+            border: 1px solid #e8dccc;
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background: #d9c5a7;
+            color: #4a3728;
+            font-weight: 600;
+        }
+
+        td {
+            color: #5a3e2e;
+        }
+
+        /* Цветные карточки */
+        .card-green, .card-beige, .card-brown, .card-orange {
+            padding: 20px 25px;
+            border-radius: 20px;
+            margin: 20px 0;
+            transition: transform 0.3s ease;
+        }
+
+        .card-green {
+            background: #f5efe6;
+            border-left: 6px solid #a68a61;
+        }
+
+        .card-beige {
+            background: #faf3e8;
+            border-left: 6px solid #d9b88c;
+        }
+
+        .card-brown {
+            background: #efe3d4;
+            border-left: 6px solid #8b5a2b;
+        }
+
+        .card-orange {
+            background: #fcead8;
+            border-left: 6px solid #e07c3c;
+        }
+
+        .card-green:hover, .card-beige:hover, .card-brown:hover, .card-orange:hover {
+            transform: translateX(5px);
+        }
+
+        /* Буклет */
+        .booklet {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 30px 0;
+        }
+
+        .booklet img {
+            max-width: 45%;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            cursor: pointer;
+        }
+
+        .booklet img:hover {
+            transform: scale(1.02);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+        }
+
+        /* Список литературы */
+        .sources-list {
+            background: #f5efe6;
+            padding: 25px 30px;
+            border-radius: 20px;
+            list-style-position: inside;
+        }
+
+        .sources-list li {
+            margin: 10px 0;
+            color: #5a3e2e;
+        }
+
+        /* Футер */
+        .footer {
+            text-align: center;
+            padding: 35px;
+            background: #d9c5a7;
+            color: #4a3728;
+            border-radius: 30px;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 32px; }
+            .stats { flex-direction: column; gap: 20px; }
+            .booklet img { max-width: 100%; }
+            .section { padding: 25px; }
+            .menu a { padding: 5px 12px; font-size: 14px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Шапка -->
+    <div class="hero fade-up">
+        <h1>🐕 Тепло рядом: как животные снижают стресс?</h1>
+        <p>Полная версия исследования. Анализ научных механизмов, опрос среди школьников, практические рекомендации, информационный буклет.</p>
+        <div class="author">
+            Выполнила: <strong>Маштакова Кристина Юрьевна</strong>, 10 «А» класс<br>
+            Руководитель проекта: <strong>Волков Максим Анатольевич</strong>
+        </div>
+    </div>
+
+    <!-- Цифры -->
+    <div class="stats">
+        <div class="stat-card fade-up">
+            <div class="stat-number">73%</div>
+            <div class="stat-label">опрошенных имеют домашнего питомца</div>
+        </div>
+        <div class="stat-card fade-up">
+            <div class="stat-number">91%</div>
+            <div class="stat-label">владельцев подтвердили, что питомец помогает справляться со стрессом</div>
+        </div>
+        <div class="stat-card fade-up">
+            <div class="stat-number">90%</div>
+            <div class="stat-label">опрошенных испытывают стресс в период экзаменов</div>
+        </div>
+    </div>
+
+    <!-- Меню -->
+    <div class="menu">
+        <a href="#introduction">Введение</a>
+        <a href="#theory">Теория</a>
+        <a href="#mechanisms">Механизмы</a>
+        <a href="#survey">Опрос</a>
+        <a href="#results">Выводы</a>
+        <a href="#sources">Источники</a>
+    </div>
+
+    <!-- Введение -->
+    <div class="section fade-up" id="introduction">
+        <h2>🐾 Стресс: эпидемия XXI века</h2>
+        <p>Стресс — это естественная реакция организма на физическое или психологическое напряжение. В малых дозах он полезен (мобилизует силы), но в хронической форме становится разрушительным.</p>
+        <br>
+        <p><strong>По данным исследований:</strong></p>
+        <ul style="margin-left: 30px; margin-top: 10px;">
+            <li>90% школьников испытывают стресс в период экзаменов</li>
+            <li>Хронический стресс приводит к проблемам с сердечно-сосудистой системой, снижению иммунитета, тревожным расстройствам</li>
+            <li>Поиск доступных и естественных способов борьбы со стрессом — актуальная задача</li>
+        </ul>
+        <br>
+        <div class="card-green">
+            <strong>📌 Гипотеза исследования:</strong> Регулярное и позитивное взаимодействие с домашними животными или участие в программах анималотерапии значительно снижает уровень стресса, улучшает психоэмоциональное состояние и общее благополучие человека.
+        </div>
+    </div>
+
+    <!-- Природа стресса -->
+    <div class="section fade-up">
+        <h2>📖 Природа стресса</h2>
+        <p><strong>Стресс</strong> — это естественная реакция организма (психическая и физиологическая) на любые внешние или внутренние раздражители (стрессоры), будь то реальная угроза или трудная ситуация, требующая мобилизации ресурсов.</p>
+        <br>
+        <div class="card-beige">
+            <strong>🧠 Виды стресса по окраске:</strong><br>
+            • <strong>Эустресс</strong> — позитивный стресс, мобилизует организм.<br>
+            • <strong>Дистресс</strong> — негативный стресс, разрушает организм.
+        </div>
+        <div class="card-beige">
+            <strong>⏱️ Виды стресса по продолжительности:</strong><br>
+            • <strong>Острый</strong> — кратковременный (от минут до дней).<br>
+            • <strong>Хронический</strong> — длительный (месяцы и годы).
+        </div>
+        <div class="card-beige">
+            <strong>⚠️ Симптомы стресса:</strong><br>
+            <strong>Психические:</strong> раздражительность, рассеянность, тревога, проблемы с концентрацией.<br>
+            <strong>Физические:</strong> учащенное сердцебиение, повышение давления, мышечное напряжение, кожные реакции.
+        </div>
+        <div class="card-beige">
+            <strong>📉 Последствия стресса:</strong><br>
+            <strong>Полезный (кратковременный):</strong> улучшает память, иммунитет, регенерацию.<br>
+            <strong>Вредный (хронический):</strong> ослабляет иммунитет, приводит к сердечно-сосудистым заболеваниям, истощению и психическим расстройствам.
+        </div>
+    </div>
+
+    <!-- Что такое зоотерапия -->
+    <div class="section fade-up">
+        <h2>🐕 Что такое зоотерапия?</h2>
+        <p><strong>Зоотерапия</strong> — метод реабилитации и улучшения психоэмоционального состояния через взаимодействие с животными, помогающий справляться со стрессом, апатией, одиночеством и улучшать физическое и когнитивное благополучие.</p>
+        <br>
+        <div class="card-orange">
+            <strong>Основные методы зоотерапии:</strong><br>
+            • Канистерапия (собаки)<br>
+            • Фелинотерапия (кошки)<br>
+            • Иппотерапия (лошади)<br>
+            • Дельфинотерапия (дельфины)<br>
+            • Мелкие животные (хомячки, кролики, попугаи)
+        </div>
+    </div>
+
+    <!-- Теория -->
+    <div class="section fade-up" id="theory">
+        <h2>📚 Анималотерапия — метод психологической помощи</h2>
+
+        <div class="card-green">
+            <strong>🐕 Канистерапия (собаки)</strong><br>
+            Наиболее изученное направление. Собаки используются в работе с детьми с аутизмом, с задержкой развития, с людьми с ПТСР.<br>
+            <em>Пример:</em> программа «Собаки-читатели» — дети читают собакам, их тревожность снижается, успеваемость растёт.
+        </div>
+
+        <div class="card-beige">
+            <strong>🐈 Фелинотерапия (кошки)</strong><br>
+            Эффективны для снятия повседневного стресса. Мурлыканье кошек (частота 20–50 Гц) действует успокаивающе.<br>
+            <em>Пример:</em> акции «Пушистый антистресс» в российских вузах (МГУ, СПбГУ) в период сессии.
+        </div>
+
+        <div class="card-brown">
+            <strong>🐎 Иппотерапия (лошади)</strong><br>
+            Метод реабилитации при ДЦП и ПТСР. Движение лошади создаёт правильный двигательный паттерн.<br>
+            <em>Пример:</em> по данным PATH Intl., у 70% ветеранов снизились симптомы тревоги.
+        </div>
+
+        <div class="card-orange">
+            <strong>🐬 Дельфинотерапия</strong><br>
+            Используется для работы с детьми с аутизмом и синдромом Дауна. Эффективность требует дальнейших исследований.
+        </div>
+    </div>
+
+    <!-- Научные механизмы (7 слайд) -->
+    <div class="section fade-up" id="mechanisms">
+        <h2>🔬 Научные основы: что происходит в организме?</h2>
+        <p><strong>При контакте с животным в организме происходят объективные изменения:</strong></p>
+        <ul style="margin-left: 30px; margin-top: 10px;">
+            <li>✔️ Снижается <strong>кортизол</strong> — гормон стресса</li>
+            <li>✔️ Повышаются <strong>окситоцин, дофамин и серотонин</strong> — гормоны радости и привязанности</li>
+            <li>✔️ Пульс и давление приходят в норму</li>
+        </ul>
+        <p>Мозг получает сигнал: <strong>«опасности нет, можно расслабиться»</strong>. Это доказывает, что эффект животных — не выдумка, а реальная физиология.</p>
+    </div>
+
+    <!-- Эксперимент -->
+    <div class="section fade-up">
+        <h2>📊 Эксперимент «Журнал стресса»</h2>
+        <p>Измерение пульса до и после 10 минут общения с животным (7 дней).</p>
+        <table>
+            <thead>
+                <tr><th>День</th><th>Пульс ДО (уд/мин)</th><th>Пульс ПОСЛЕ (уд/мин)</th><th>Изменение</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>День 1</td><td>84</td><td>74</td><td>–10</td></tr>
+                <tr><td>День 2</td><td>79</td><td>73</td><td>–6</td></tr>
+                <tr><td>День 3</td><td>88</td><td>76</td><td>–12</td></tr>
+                <tr><td>День 4</td><td>76</td><td>72</td><td>–4</td></tr>
+                <tr><td>День 5</td><td>81</td><td>74</td><td>–7</td></tr>
+                <tr><td>День 6</td><td>86</td><td>77</td><td>–9</td></tr>
+                <tr><td>День 7</td><td>78</td><td>73</td><td>–5</td></tr>
+                <tr style="background:#f5efe6"><td><strong>Среднее</strong></td><td><strong>81,7</strong></td><td><strong>74,1</strong></td><td><strong>–7,6</strong></td></tr>
+            </tbody>
+        </table>
+        <div class="card-green">
+            <strong>📉 Вывод:</strong> Пульс снижался каждый день. В среднем — на 7,6 удара в минуту. Эксперимент подтверждает научные данные: общение с животным снижает частоту сердечных сокращений и способствует расслаблению.
+        </div>
+    </div>
+
+    <!-- Опрос -->
+    <div class="section fade-up" id="survey">
+        <h2>📋 Результаты опроса</h2>
+        <p>Анкетирование среди 15 школьников 14–17 лет.</p>
+        <table>
+            <thead><tr><th>Вопрос</th><th>Да</th><th>Скорее да</th><th>Нет</th></tr></thead>
+            <tbody>
+                <tr><td>Есть ли у вас питомец?</td><td>11 (73%)</td><td>—</td><td>4 (27%)</td></tr>
+                <tr><td>Помогает ли питомец справляться со стрессом?</td><td>10 (91%)</td><td>2 (18%)</td><td>1 (9%)</td></tr>
+            </tbody>
+        </table>
+        <div class="card-green">
+            <strong>✅ Вывод:</strong> 91% владельцев подтвердили, что питомец помогает справляться со стрессом.
+        </div>
+    </div>
+
+    <!-- Ограничения -->
+    <div class="section fade-up">
+        <h2>⚠️ Ограничения и ответственность</h2>
+        <div class="card-orange">
+            <strong>Не для всех:</strong> риск аллергий, фобий (зоофобия), травм и инфекций.
+        </div>
+        <div class="card-beige">
+            <strong>Не вместо врача:</strong> зоотерапия — помощник, а не замена лечению у психолога или врача.
+        </div>
+        <div class="card-brown">
+            <strong>Благополучие животного — прежде всего:</strong><br>
+            • Животное — не инструмент, а партнёр.<br>
+            • У него должен быть выбор, отдых и хорошие условия.<br>
+            • Принуждение вредит и человеку, и животному.
+        </div>
+    </div>
+
+    <!-- Выводы -->
+    <div class="section fade-up" id="results">
+        <h2>✅ Гипотеза подтверждена</h2>
+        <div class="card-green">
+            <strong>🟢 ЗЕЛЁНАЯ ЗОНА — НАУЧНО ДОКАЗАНО</strong><br>
+            ✅ Снижение уровня кортизола после 10–15 минут общения с животным<br>
+            ✅ Повышение уровня окситоцина при зрительном контакте<br>
+            ✅ Нормализация пульса и давления<br>
+            ✅ Активация парасимпатической нервной системы
+        </div>
+        <div class="card-orange">
+            <strong>🟡 ЖЁЛТАЯ ЗОНА — ТРЕБУЕТ ОСТОРОЖНОСТИ</strong><br>
+            ⚠️ Не заменяет профессиональную медицинскую помощь<br>
+            ⚠️ Есть противопоказания (аллергия, зоофобия)<br>
+            ⚠️ Нельзя принуждать животное к контакту
+        </div>
+    </div>
+
+    <!-- Буклет -->
+    <div class="section fade-up">
+        <h2>📖 Мой продукт — буклет «Тепло рядом»</h2>
+        <p>В рамках проекта создан информационный буклет-памятка <strong>«Тепло рядом: как животные снижают стресс»</strong>. Буклет содержит: научные факты, практические советы, правила безопасности.</p>
+        <div class="booklet">
+            <img src="буклет 1.jpg" alt="Лицевая сторона буклета" onerror="this.src='https://via.placeholder.com/400x300?text=Буклет+лицевая+сторона'">
+            <img src="буклет 2.jpg" alt="Оборотная сторона буклета" onerror="this.src='https://via.placeholder.com/400x300?text=Буклет+оборотная+сторона'">
+        </div>
+        <div class="card-green">
+            <strong>📌 Главные правила безопасности:</strong><br>
+            1. Проверьте, нет ли аллергии<br>
+            2. Всегда мойте руки после контакта<br>
+            3. Уважайте сигналы животного (не трогайте, если оно ушло или спит)<br>
+            4. Без принуждения — только если хочет и вы, и он<br>
+            5. Животное — ваш партнёр, а не лекарство
+        </div>
+    </div>
+
+    <!-- Источники -->
+    <div class="section fade-up" id="sources">
+        <h2>📚 Список использованных источников</h2>
+        <ul class="sources-list">
+            <li>Селье Г. Стресс без дистресса. — М.: Прогресс, 1979. — 124 с.</li>
+            <li>Костина Л.М. Анималотерапия. Домашние животные и наше здоровье. — СПб.: Речь, 2005. — 192 с.</li>
+            <li>Фирсова И.В. Канистерапия: теория и практика. — М.: Институт психотерапии, 2012. — 156 с.</li>
+            <li>Шереметьева Н.А. Психология стресса и методы его коррекции. — М.: Академия, 2018. — 208 с.</li>
+            <li>Beetz A. Psychosocial and Psychophysiological Effects of Human-Animal Interactions // Frontiers in Psychology. — 2012.</li>
+            <li>PATH International. — URL: https://pathintl.org</li>
+        </ul>
+    </div>
+
+    <!-- Футер -->
+    <div class="footer fade-up">
+        <p>🐾 Спасибо за внимание! 🐾</p>
+        <p>Исследование показало: животные — это не просто друзья, а природные союзники в борьбе со стрессом.</p>
+        <p>Даже 10–15 минут общения с питомцем достаточно, чтобы почувствовать себя спокойнее.</p>
+        <p style="margin-top: 15px;">© Кристина Юрьевна, 2026</p>
+    </div>
+</div>
+
+<script>
+    // Плавное появление элементов при прокрутке
+    const fadeElements = document.querySelectorAll('.fade-up');
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1 });
+    
+    fadeElements.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
